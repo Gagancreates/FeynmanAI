@@ -4,6 +4,7 @@ import { AgentPrompt } from '../../shared/types/AgentPrompt'
 import { getSystemPromptFlags } from './getSystemPromptFlags'
 import { buildIntroPromptSection } from './sections/intro-section'
 import { buildRulesPromptSection } from './sections/rules-section'
+import { buildTutorPromptSection } from './sections/tutor-section'
 
 /**
  * Build the system prompt for the agent.
@@ -31,7 +32,7 @@ export function buildSystemPrompt(
 	const { actionTypes, partTypes } = modePart
 	const flags = getSystemPromptFlags(actionTypes, partTypes)
 
-	const lines = [buildIntroPromptSection(flags), buildRulesPromptSection(flags)]
+	const lines = [buildIntroPromptSection(flags), buildTutorPromptSection(), buildRulesPromptSection(flags)]
 
 	if (withSchema) {
 		lines.push(buildSchemaPromptSection(modePart))
