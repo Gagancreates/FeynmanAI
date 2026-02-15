@@ -3,7 +3,7 @@ import { useRef, useCallback } from 'react'
 export function useVoiceOutput(onStart: () => void, onEnd: () => void) {
 	const isPlayingRef = useRef(false)
 	const audioCtxRef = useRef<AudioContext | null>(null)
-	const queueRef = useRef<string[]>([])
+	const queueRef = useRef<{ text: string; languageCode: string }[]>([])
 
 	const playNext = useCallback(async () => {
 		if (queueRef.current.length === 0) {
@@ -13,13 +13,13 @@ export function useVoiceOutput(onStart: () => void, onEnd: () => void) {
 			return
 		}
 
-		const text = queueRef.current.shift()!
+		const item = queueRef.current.shift()!
 
 		try {
 			const res = await fetch('/tts', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ text }),
+				body: JSON.stringify({ text: item.text, language_code: item.languageCode }),
 			})
 
 			const arrayBuffer = await res.arrayBuffer()
@@ -41,8 +41,8 @@ export function useVoiceOutput(onStart: () => void, onEnd: () => void) {
 	}, [onEnd])
 
 	const speak = useCallback(
-		(text: string) => {
-			queueRef.current.push(text)
+		(text: string, languageCode = 'en-IN') => {
+			queueRef.current.push({ text, languageCode })
 			if (!isPlayingRef.current) {
 				isPlayingRef.current = true
 				onStart()

@@ -28,8 +28,23 @@ function pcmToWav(pcm: Uint8Array, sampleRate = 24000, channels = 1, bitsPerSamp
 	return new Uint8Array(buf)
 }
 
+// Map Sarvam language codes to BCP-47 tags Gemini understands
+const LANG_MAP: Record<string, string> = {
+	'hi-IN': 'hi-IN',
+	'kn-IN': 'kn-IN',
+	'en-IN': 'en-IN',
+	'en-US': 'en-US',
+}
+
 export async function handleTTS(request: Request, env: Environment): Promise<Response> {
-	const { text } = await request.json<{ text: string }>()
+	const { text, language_code } = await request.json<{ text: string; language_code?: string }>()
+
+	const lang = LANG_MAP[language_code ?? ''] ?? 'en-IN'
+
+	// Prepend a language instruction so Gemini speaks in the right language
+	const langInstruction = lang !== 'en-IN' && lang !== 'en-US'
+		? `[Speak the following text in ${lang} language, preserving the original language exactly]: ${text}`
+		: text
 
 	const response = await fetch(
 		`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${env.GOOGLE_API_KEY}`,
@@ -37,7 +52,7 @@ export async function handleTTS(request: Request, env: Environment): Promise<Res
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
-				contents: [{ parts: [{ text }] }],
+				contents: [{ parts: [{ text: langInstruction }] }],
 				generationConfig: {
 					response_modalities: ['AUDIO'],
 					speech_config: {

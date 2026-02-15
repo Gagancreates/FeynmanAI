@@ -20,6 +20,6 @@ export async function handleSTT(request: Request, env: Environment): Promise<Res
 		return Response.json({ transcript: '', error: err, status: response.status }, { status: 500 })
 	}
 
-	const data = (await response.json()) as { transcript: string }
-	return Response.json({ transcript: data.transcript ?? '' })
+	const data = (await response.json()) as { transcript: string; language_code?: string }
+	return Response.json({ transcript: data.transcript ?? '', language_code: data.language_code ?? 'en-IN' })
 }

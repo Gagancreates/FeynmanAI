@@ -3,7 +3,7 @@ import { useRef, useState, useCallback, useEffect } from 'react'
 const SILENCE_THRESHOLD = 15 // avg frequency amplitude (0-255) below which = silence
 const SILENCE_DURATION_MS = 1500 // 1.5s of silence triggers end-of-speech
 
-export function useVoiceInput(onTranscript: (text: string) => void) {
+export function useVoiceInput(onTranscript: (text: string, languageCode: string) => void) {
 	const [isMuted, setIsMuted] = useState(true)
 	const [isListening, setIsListening] = useState(false)
 	const [isProcessing, setIsProcessing] = useState(false)
@@ -62,11 +62,11 @@ export function useVoiceInput(onTranscript: (text: string) => void) {
 				console.log('[STT] Sending audio blob, size:', audioBlob.size)
 				const res = await fetch('/stt', { method: 'POST', body: formData })
 				console.log('[STT] Response status:', res.status)
-				const json = await res.json() as { transcript: string; error?: string; status?: number }
+				const json = await res.json() as { transcript: string; language_code?: string; error?: string; status?: number }
 				console.log('[STT] Response body:', json)
 				if (json.error) console.error('[STT] Sarvam error:', json.status, json.error)
 				const transcript = json.transcript
-				if (transcript?.trim()) onTranscript(transcript.trim())
+				if (transcript?.trim()) onTranscript(transcript.trim(), json.language_code ?? 'en-IN')
 				else console.warn('[STT] Empty transcript received')
 			} catch (err) {
 				console.error('[STT] Error:', err)

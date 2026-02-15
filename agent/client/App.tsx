@@ -66,7 +66,10 @@ function App() {
 	)
 
 	useEffect(() => {
-		const handler = (e: CustomEvent) => speak(e.detail as string)
+		const handler = (e: CustomEvent) => {
+			const lang = (window as any).__detectedLanguage ?? 'en-IN'
+			speak(e.detail as string, lang)
+		}
 		window.addEventListener('agent-message', handler as EventListener)
 		return () => window.removeEventListener('agent-message', handler as EventListener)
 	}, [speak])

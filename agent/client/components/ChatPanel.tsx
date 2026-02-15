@@ -25,8 +25,10 @@ export function ChatPanel() {
 		[agent]
 	)
 
-	const { isMuted, isListening, isProcessing, toggleMute } = useVoiceInput((transcript) => {
+	const { isMuted, isListening, isProcessing, toggleMute } = useVoiceInput((transcript, languageCode) => {
 		setLastTranscript(transcript)
+		// Store detected language globally so TTS can use it
+		;(window as any).__detectedLanguage = languageCode
 		sendToAgent(transcript)
 	})
 
