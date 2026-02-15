@@ -7,9 +7,7 @@ export const MessageActionUtil = registerActionUtil(
 		static override type = 'message' as const
 
 		override applyAction(action: Streaming<MessageAction>) {
-			console.log('[MessageActionUtil] applyAction called, complete:', action.complete, 'text:', action.text?.slice(0, 50))
 			if (!action.complete) return
-			console.log('[MessageActionUtil] dispatching agent-message event')
 			window.dispatchEvent(new CustomEvent('agent-message', { detail: action.text }))
 		}
 

@@ -66,10 +66,7 @@ function App() {
 	)
 
 	useEffect(() => {
-		const handler = (e: CustomEvent) => {
-			console.log('[App] agent-message received, speaking:', (e.detail as string)?.slice(0, 50))
-			speak(e.detail as string)
-		}
+		const handler = (e: CustomEvent) => speak(e.detail as string)
 		window.addEventListener('agent-message', handler as EventListener)
 		return () => window.removeEventListener('agent-message', handler as EventListener)
 	}, [speak])
