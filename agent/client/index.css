@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;700&family=EB+Garamond:wght@500;700&display=swap');
 @import url('tldraw/tldraw.css');
 
 * {
@@ -27,6 +27,27 @@ body {
 .tldraw-canvas {
 	width: 100%;
 	height: 100%;
+	position: relative;
+}
+
+.canvas-brand {
+	position: absolute;
+	top: 12px;
+	left: 65%;
+	transform: translateX(-50%);
+	z-index: 500;
+	background: rgba(255, 255, 255, 0.85);
+	backdrop-filter: blur(6px);
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 20px;
+	padding: 5px 14px;
+	font-size: 26px;
+	font-weight: 700;
+	font-family: 'Inter', sans-serif;
+	color: #1a1a1a;
+	letter-spacing: 0.01em;
+	pointer-events: none;
+	box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Chat Panel */
@@ -878,19 +899,20 @@ button.prompt-tag span {
 .mic-overlay {
 	position: fixed;
 	bottom: 20px;
-	left: 20px;
+	left: calc((100vw - 350px) / 2 + 160px);
+	transform: translateX(-50%);
 	z-index: 500;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
+	align-items: center;
 	gap: 6px;
 	pointer-events: none;
 }
 
 .mic-overlay-button {
 	pointer-events: all;
-	width: 44px;
-	height: 44px;
+	width: 56px;
+	height: 56px;
 	border-radius: 50%;
 	border: none;
 	cursor: pointer;

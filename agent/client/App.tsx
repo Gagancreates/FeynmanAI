@@ -75,6 +75,7 @@ function App() {
 	// These use TldrawAgentAppContextProvider to access the app/agent
 	const components: TLComponents = useMemo(() => {
 		return {
+			StylePanel: null,
 			HelperButtons: () =>
 				app && (
 					<TldrawAgentAppContextProvider app={app}>
@@ -99,6 +100,7 @@ function App() {
 		<TldrawUiToastsProvider>
 			<div className="tldraw-agent-container">
 				<div className="tldraw-canvas">
+					<div className="canvas-brand">FeynmanAI</div>
 					<Tldraw
 						persistenceKey="tldraw-agent-demo"
 						tools={tools}
