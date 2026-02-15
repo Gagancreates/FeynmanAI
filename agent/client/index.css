@@ -967,6 +967,38 @@ button.prompt-tag span {
 	pointer-events: none;
 }
 
+/* Language selector */
+
+.lang-selector {
+	display: flex;
+	gap: 4px;
+	pointer-events: all;
+}
+
+.lang-btn {
+	padding: 4px 10px;
+	border-radius: 14px;
+	border: 1px solid rgba(255,255,255,0.2);
+	background: rgba(0,0,0,0.5);
+	color: rgba(255,255,255,0.6);
+	font-size: 12px;
+	font-weight: 600;
+	font-family: 'Inter', sans-serif;
+	cursor: pointer;
+	transition: background 0.15s, color 0.15s;
+}
+
+.lang-btn:hover {
+	background: rgba(255,255,255,0.15);
+	color: #fff;
+}
+
+.lang-btn-active {
+	background: rgba(255,255,255,0.9);
+	color: #1a1a1a;
+	border-color: transparent;
+}
+
 .mic-overlay-status {
 	font-size: 11px;
 	color: rgba(255,255,255,0.5);

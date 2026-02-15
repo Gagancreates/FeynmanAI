@@ -8,6 +8,7 @@ export function useVoiceOutput(onStart: () => void, onEnd: () => void) {
 	const playNext = useCallback(async () => {
 		if (queueRef.current.length === 0) {
 			isPlayingRef.current = false
+			;(window as any).__detectedLanguage = 'en-IN' // reset after each speaking cycle
 			onEnd()
 			window.dispatchEvent(new CustomEvent('tts-end'))
 			return

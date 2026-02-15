@@ -5,17 +5,26 @@ import { ChatHistory } from './chat-history/ChatHistory'
 import { ChatInput } from './ChatInput'
 import { TodoList } from './TodoList'
 
+const LANGUAGES = [
+	{ code: 'en-IN', label: 'EN', name: 'English' },
+	{ code: 'hi-IN', label: 'हि', name: 'Hindi' },
+	{ code: 'kn-IN', label: 'ಕ', name: 'Kannada' },
+]
+
 export function ChatPanel() {
 	const agent = useAgent()
 	const inputRef = useRef<HTMLTextAreaElement>(null)
 	const [lastTranscript, setLastTranscript] = useState('')
+	const [selectedLang, setSelectedLang] = useState('en-IN')
 
 	const sendToAgent = useCallback(
-		(value: string) => {
+		(value: string, langCode: string) => {
 			if (!value.trim()) return
+			const lang = LANGUAGES.find((l) => l.code === langCode)
+			const taggedValue = `[Language: ${lang?.name ?? 'English'}] ${value}`
 			agent.interrupt({
 				input: {
-					agentMessages: [value],
+					agentMessages: [taggedValue],
 					bounds: agent.editor.getViewportPageBounds(),
 					source: 'user',
 					contextItems: agent.context.getItems(),
@@ -25,11 +34,10 @@ export function ChatPanel() {
 		[agent]
 	)
 
-	const { isMuted, isListening, isProcessing, toggleMute } = useVoiceInput((transcript, languageCode) => {
+	const { isMuted, isListening, isProcessing, toggleMute } = useVoiceInput((transcript) => {
 		setLastTranscript(transcript)
-		// Store detected language globally so TTS can use it
-		;(window as any).__detectedLanguage = languageCode
-		sendToAgent(transcript)
+		;(window as any).__detectedLanguage = selectedLang
+		sendToAgent(transcript, selectedLang)
 	})
 
 	const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>(
@@ -45,9 +53,10 @@ export function ChatPanel() {
 			}
 
 			inputRef.current.value = ''
-			sendToAgent(value)
+			;(window as any).__detectedLanguage = selectedLang
+			sendToAgent(value, selectedLang)
 		},
-		[agent, sendToAgent]
+		[agent, sendToAgent, selectedLang]
 	)
 
 	const handleNewChat = useCallback(() => {
@@ -57,8 +66,20 @@ export function ChatPanel() {
 
 	return (
 		<>
-			{/* Floating mic overlay on canvas — bottom left */}
+			{/* Floating mic overlay on canvas — bottom center */}
 			<div className="mic-overlay">
+				{/* Language selector */}
+				<div className="lang-selector">
+					{LANGUAGES.map((l) => (
+						<button
+							key={l.code}
+							className={`lang-btn ${selectedLang === l.code ? 'lang-btn-active' : ''}`}
+							onClick={() => setSelectedLang(l.code)}
+						>
+							{l.label}
+						</button>
+					))}
+				</div>
 				<button
 					className={`mic-overlay-button ${isListening ? 'mic-listening' : isProcessing ? 'mic-processing' : isMuted ? 'mic-muted' : 'mic-idle'}`}
 					onClick={toggleMute}
