@@ -3,6 +3,7 @@ import { WorkerEntrypoint } from 'cloudflare:workers'
 import { AutoRouter, cors, error, IRequest } from 'itty-router'
 import { Environment } from './environment'
 import { stream } from './routes/stream'
+import { handleSTT } from './routes/stt'
 
 const { preflight, corsify } = cors({ origin: '*' })
 
@@ -14,6 +15,7 @@ const router = AutoRouter<IRequest, [env: Environment, ctx: ExecutionContext]>({
 		return error(e)
 	},
 }).post('/stream', stream)
+	.post('/stt', (req, env) => handleSTT(req, env))
 
 export default class extends WorkerEntrypoint<Environment> {
 	override fetch(request: Request): Promise<Response> {

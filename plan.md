@@ -12,7 +12,7 @@
 |---|---|
 | Canvas + Agent | tldraw Agent Starter Kit |
 | AI Brain | Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`) |
-| STT | Gemini 2.0 Flash (audio → transcript) |
+| STT | Sarvam AI — `saarika:v2.5` (audio blob → transcript) |
 | TTS | Gemini 2.0 Flash Preview TTS (text → audio) |
 | Backend | Cloudflare Worker (included in tldraw starter kit) |
 | Frontend | React + Vite (included in tldraw starter kit) |
@@ -21,7 +21,8 @@
 
 ```
 ANTHROPIC_API_KEY=...     # Claude — from console.anthropic.com
-GOOGLE_API_KEY=...        # Gemini STT + TTS — from ai.google.dev
+SARVAM_API_KEY=...        # Sarvam STT — from dashboard.sarvam.ai
+GOOGLE_API_KEY=...        # Gemini TTS — from ai.google.dev
 ```
 
 ---
@@ -221,34 +222,21 @@ Expected:
 // worker/routes/stt.ts
 export async function handleSTT(request: Request, env: Env): Promise<Response> {
   const formData = await request.formData()
-  const audioBlob = formData.get('audio') as File
-  const audioBase64 = Buffer.from(await audioBlob.arrayBuffer()).toString('base64')
-  const mimeType = audioBlob.type // 'audio/webm;codecs=opus'
 
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${env.GOOGLE_API_KEY}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [
-            {
-              inline_data: {
-                mime_type: mimeType,
-                data: audioBase64,
-              }
-            },
-            { text: 'Transcribe this audio exactly. Return only the transcribed text, nothing else.' }
-          ]
-        }]
-      })
-    }
-  )
+  // Forward audio blob directly to Sarvam — no base64 needed
+  const sarvamForm = new FormData()
+  sarvamForm.append('file', formData.get('audio') as File)
+  sarvamForm.append('model', 'saarika:v2.5')
+  sarvamForm.append('language_code', 'unknown') // auto-detect language
+
+  const response = await fetch('https://api.sarvam.ai/speech-to-text', {
+    method: 'POST',
+    headers: { 'api-subscription-key': env.SARVAM_API_KEY },
+    body: sarvamForm,
+  })
 
   const data = await response.json()
-  const transcript = data.candidates[0].content.parts[0].text.trim()
-  return Response.json({ transcript })
+  return Response.json({ transcript: data.transcript })
 }
 ```
 
@@ -973,10 +961,12 @@ Turn 3: "Can you show me the chemical equation?"
 ```bash
 # agent/.dev.vars  (local development — Cloudflare Workers local secrets)
 ANTHROPIC_API_KEY=sk-ant-...
+SARVAM_API_KEY=sk_...
 GOOGLE_API_KEY=AIza...
 
 # Production — set via Wrangler CLI (never commit secrets to wrangler.toml)
 wrangler secret put ANTHROPIC_API_KEY
+wrangler secret put SARVAM_API_KEY
 wrangler secret put GOOGLE_API_KEY
 ```
 

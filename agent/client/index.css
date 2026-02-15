@@ -823,3 +823,132 @@ button.prompt-tag span {
 .agent-action-type-message {
 	color: var(--tl-color-text-1);
 }
+
+/* Mic button */
+
+.mic-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	border-radius: 6px;
+	border: 1px solid var(--tl-color-text-2);
+	background: transparent;
+	cursor: pointer;
+	color: var(--tl-color-text-2);
+	flex-shrink: 0;
+	transition: background 0.15s, color 0.15s, border-color 0.15s;
+	padding: 0;
+}
+
+.mic-button:hover {
+	color: var(--tl-color-text);
+	border-color: var(--tl-color-text);
+}
+
+.mic-button.mic-muted {
+	color: var(--tl-color-text-3);
+	border-color: var(--tl-color-text-3);
+}
+
+.mic-button.mic-idle {
+	color: var(--tl-color-text-2);
+}
+
+.mic-button.mic-listening {
+	color: #ef4444;
+	border-color: #ef4444;
+	background: rgba(239, 68, 68, 0.1);
+	animation: mic-pulse 1.5s ease-in-out infinite;
+}
+
+.mic-button.mic-processing {
+	color: var(--tl-color-primary);
+	border-color: var(--tl-color-primary);
+}
+
+@keyframes mic-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.6; }
+}
+
+/* Mic overlay — floating on canvas bottom left */
+
+.mic-overlay {
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	z-index: 500;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	pointer-events: none;
+}
+
+.mic-overlay-button {
+	pointer-events: all;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background 0.15s, color 0.15s, transform 0.1s;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
+.mic-overlay-button:active {
+	transform: scale(0.94);
+}
+
+.mic-overlay-button.mic-muted {
+	background: #3a3a3a;
+	color: #888;
+}
+
+.mic-overlay-button.mic-idle {
+	background: #2a2a2a;
+	color: #ccc;
+}
+
+.mic-overlay-button.mic-listening {
+	background: #ef4444;
+	color: white;
+	animation: mic-pulse 1.5s ease-in-out infinite;
+}
+
+.mic-overlay-button.mic-processing {
+	background: #1d4ed8;
+	color: white;
+}
+
+@keyframes mic-pulse {
+	0%, 100% { box-shadow: 0 2px 8px rgba(239,68,68,0.4); }
+	50% { box-shadow: 0 2px 20px rgba(239,68,68,0.7); }
+}
+
+.mic-overlay-transcript {
+	background: rgba(0,0,0,0.7);
+	color: #fff;
+	font-size: 12px;
+	padding: 4px 10px;
+	border-radius: 8px;
+	font-style: italic;
+	max-width: 220px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	pointer-events: none;
+}
+
+.mic-overlay-status {
+	font-size: 11px;
+	color: rgba(255,255,255,0.5);
+	padding-left: 4px;
+	pointer-events: none;
+	font-family: 'Inter', sans-serif;
+}
