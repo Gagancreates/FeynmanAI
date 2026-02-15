@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 
 const SILENCE_THRESHOLD = 15 // avg frequency amplitude (0-255) below which = silence
 const SILENCE_DURATION_MS = 1500 // 1.5s of silence triggers end-of-speech
@@ -129,6 +129,24 @@ export function useVoiceInput(onTranscript: (text: string) => void) {
 		setIsMuted(false)
 		startListening()
 	}, [startListening])
+
+	// Auto-mute when TTS starts, auto-unmute when TTS ends
+	useEffect(() => {
+		const onTTSStart = () => {
+			stopEverything()
+			setIsMuted(true)
+		}
+		const onTTSEnd = () => {
+			setIsMuted(false)
+			startListening()
+		}
+		window.addEventListener('tts-start', onTTSStart)
+		window.addEventListener('tts-end', onTTSEnd)
+		return () => {
+			window.removeEventListener('tts-start', onTTSStart)
+			window.removeEventListener('tts-end', onTTSEnd)
+		}
+	}, [stopEverything, startListening])
 
 	return { isMuted, isListening, isProcessing, toggleMute, muteMic, unmuteMic }
 }

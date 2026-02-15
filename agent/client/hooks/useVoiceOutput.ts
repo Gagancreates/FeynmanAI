@@ -9,6 +9,7 @@ export function useVoiceOutput(onStart: () => void, onEnd: () => void) {
 			if (isPlayingRef.current) return
 			isPlayingRef.current = true
 			onStart()
+			window.dispatchEvent(new CustomEvent('tts-start'))
 
 			try {
 				const res = await fetch('/tts', {
@@ -30,12 +31,14 @@ export function useVoiceOutput(onStart: () => void, onEnd: () => void) {
 				source.onended = () => {
 					isPlayingRef.current = false
 					onEnd()
+					window.dispatchEvent(new CustomEvent('tts-end'))
 				}
 				source.start()
 			} catch (e) {
 				console.error('[TTS] playback failed', e)
 				isPlayingRef.current = false
 				onEnd()
+				window.dispatchEvent(new CustomEvent('tts-end'))
 			}
 		},
 		[onStart, onEnd]
@@ -45,6 +48,7 @@ export function useVoiceOutput(onStart: () => void, onEnd: () => void) {
 		isPlayingRef.current = false
 		audioCtxRef.current?.close()
 		audioCtxRef.current = null
+		window.dispatchEvent(new CustomEvent('tts-end'))
 	}, [])
 
 	return { speak, stop }
