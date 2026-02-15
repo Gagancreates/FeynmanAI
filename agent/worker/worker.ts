@@ -4,6 +4,7 @@ import { AutoRouter, cors, error, IRequest } from 'itty-router'
 import { Environment } from './environment'
 import { stream } from './routes/stream'
 import { handleSTT } from './routes/stt'
+import { handleTTS } from './routes/tts'
 
 const { preflight, corsify } = cors({ origin: '*' })
 
@@ -16,6 +17,7 @@ const router = AutoRouter<IRequest, [env: Environment, ctx: ExecutionContext]>({
 	},
 }).post('/stream', stream)
 	.post('/stt', (req, env) => handleSTT(req, env))
+	.post('/tts', (req, env) => handleTTS(req, env))
 
 export default class extends WorkerEntrypoint<Environment> {
 	override fetch(request: Request): Promise<Response> {

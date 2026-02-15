@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
 	DefaultSizeStyle,
 	ErrorBoundary,
@@ -14,6 +14,7 @@ import {
 	TldrawAgentAppProvider,
 } from './agent/TldrawAgentAppProvider'
 import { ChatPanel } from './components/ChatPanel'
+import { useVoiceOutput } from './hooks/useVoiceOutput'
 import { ChatPanelFallback } from './components/ChatPanelFallback'
 import { CustomHelperButtons } from './components/CustomHelperButtons'
 import { AgentViewportBoundsHighlights } from './components/highlights/AgentViewportBoundsHighlights'
@@ -58,6 +59,17 @@ function App() {
 	const handleUnmount = useCallback(() => {
 		setApp(null)
 	}, [])
+
+	const { speak } = useVoiceOutput(
+		() => {},
+		() => {}
+	)
+
+	useEffect(() => {
+		const handler = (e: CustomEvent) => speak(e.detail as string)
+		window.addEventListener('agent-message', handler as EventListener)
+		return () => window.removeEventListener('agent-message', handler as EventListener)
+	}, [speak])
 
 	// Custom components to visualize what the agent is doing
 	// These use TldrawAgentAppContextProvider to access the app/agent
