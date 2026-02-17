@@ -55,6 +55,7 @@ const overrides: TLUiOverrides = {
 
 function App() {
 	const [app, setApp] = useState<TldrawAgentApp | null>(null)
+	const [chatOpen, setChatOpen] = useState(true)
 
 	const handleUnmount = useCallback(() => {
 		setApp(null)
@@ -104,6 +105,13 @@ function App() {
 			<div className="tldraw-agent-container">
 				<div className="tldraw-canvas">
 					<div className="canvas-brand">FeynmanAI</div>
+					<button
+						className="chat-toggle-btn"
+						onClick={() => setChatOpen((o) => !o)}
+						title={chatOpen ? 'Hide chat' : 'Show chat'}
+					>
+						{chatOpen ? '›' : '‹'}
+					</button>
 					<Tldraw
 						persistenceKey="tldraw-agent-demo"
 						tools={tools}
@@ -114,13 +122,15 @@ function App() {
 						<TldrawAgentAppProvider onMount={setApp} onUnmount={handleUnmount} />
 					</Tldraw>
 				</div>
-				<ErrorBoundary fallback={ChatPanelFallback}>
-					{app && (
-						<TldrawAgentAppContextProvider app={app}>
-							<ChatPanel />
-						</TldrawAgentAppContextProvider>
-					)}
-				</ErrorBoundary>
+				<div className={`chat-sidebar${chatOpen ? '' : ' chat-sidebar--closed'}`}>
+					<ErrorBoundary fallback={ChatPanelFallback}>
+						{app && (
+							<TldrawAgentAppContextProvider app={app}>
+								<ChatPanel />
+							</TldrawAgentAppContextProvider>
+						)}
+					</ErrorBoundary>
+				</div>
 			</div>
 		</TldrawUiToastsProvider>
 	)
