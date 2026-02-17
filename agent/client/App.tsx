@@ -109,6 +109,7 @@ function App() {
 						tools={tools}
 						overrides={overrides}
 						components={components}
+						licenseKey="tldraw-2026-05-26/WyJFeUZRUWxNRyIsWyIqIl0sMTYsIjIwMjYtMDUtMjYiXQ.5vlp4bWhRTmJa/CP/RFY52gMEftQc1t51FQ1iYhH+PRvSyjk7NF51OIjkUGtv4zlggoOSIeHV9/qZwSVQHPLOA"
 					>
 						<TldrawAgentAppProvider onMount={setApp} onUnmount={handleUnmount} />
 					</Tldraw>
