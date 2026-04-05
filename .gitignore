@@ -1,1 +1,19 @@
+# Claude Code
+.claude/
+CLAUDE.md
+
+# Environment
 .env
+.dev.vars
+*.dev.vars
+
+# Docs (internal planning notes)
+docs/
+
+# Build output
+agent/dist/
+
+# Dependencies
+node_modules/
+agent/node_modules/
+.yarn/
