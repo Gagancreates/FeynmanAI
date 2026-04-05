@@ -2,11 +2,17 @@
 
 A real-time, voice-first AI tutor that teaches on a live canvas. Ask a question by voice, and the tutor speaks back while drawing diagrams, writing equations, and building visual explanations in real time.
 
-<img width="1920" height="1015" alt="Image" src="https://github.com/user-attachments/assets/7ce2fd5d-286d-4eb4-b7c4-e9a52dda68a3" />
+https://www.loom.com/share/c60b29180773436e98c5e6f6687e6d48
 
-<img width="1920" height="1026" alt="Image" src="https://github.com/user-attachments/assets/8d64f75b-efb9-4d8f-9e0c-d398b332608e" />
+<img width="1440" height="764" alt="Image" src="https://github.com/user-attachments/assets/e0c983f0-fbf4-4905-8f6d-eefdf7e31c9c" />
 
-<img width="1920" height="1016" alt="Image" src="https://github.com/user-attachments/assets/176904b1-8b4c-44a4-8b47-5ac3906ba813" />
+<img width="1440" height="770" alt="Image" src="https://github.com/user-attachments/assets/97fdaf95-2277-43d0-bd83-7aff61744aab" />
+
+<img width="1440" height="762" alt="Image" src="https://github.com/user-attachments/assets/fb39fb98-600f-46ae-9375-acd6bc5faa73" />
+
+<img width="1440" height="761" alt="Image" src="https://github.com/user-attachments/assets/3705239b-2040-4a3f-8e3e-873fc380be41" />
+
+<img width="1440" height="755" alt="Image" src="https://github.com/user-attachments/assets/8932e295-9bc9-41a0-95ee-eecc7a2ee3e6" />
 
 ## Overview
 
